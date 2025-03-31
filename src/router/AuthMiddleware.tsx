@@ -7,7 +7,7 @@ enum RoutesState {
     Unsubscribed,
 }
 
-const AuthWrapper = () => {
+const AuthMiddleware = () => {
     const location = useLocation();
     const pathSegments = location.pathname.split("/").filter(Boolean);
     const { userData } = useUser();
@@ -51,4 +51,4 @@ const AuthWrapper = () => {
     // return <Outlet context={{ path: target }} />;
 };
 
-export default AuthWrapper;
+export default AuthMiddleware;
