@@ -1,18 +1,18 @@
-import React from "react";
+import { Suspense } from "react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import routes from "./routes";
 
 const AppRoutes = () => {
-    const element = useRoutes(routes);
-    return element;
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            {useRoutes(routes)}
+        </Suspense>
+    );
 };
-
 const App = () => {
     return (
         <Router>
-            <React.Suspense fallback={<div>Loading...</div>}>
-                <AppRoutes />
-            </React.Suspense>
+            <AppRoutes />
         </Router>
     );
 };
