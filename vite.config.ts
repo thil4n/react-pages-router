@@ -1,12 +1,13 @@
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
+import GlobPlugin from "vite-plugin-glob";
 
 export default defineConfig({
     server: {
         port: 4000,
     },
-    plugins: [react()],
+    plugins: [react(), GlobPlugin()],
     resolve: {
         alias: {
             "@components": path.resolve(__dirname, "src/components"),
