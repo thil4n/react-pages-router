@@ -23,7 +23,8 @@ const routes = Object.keys(modules).map((path) => {
 
         .replace("./pages", "")
         .replace(/\/index\.tsx$/, "/")
-        .replace(/\[([^\]]+)]/g, ":$1");
+        .replace(/\(.*?\)\//g, "") // Remove group folders
+        .replace(/\[([^\]]+)\]/g, ":$1");
 
     const layoutPath = path.split("/").slice(0, -1).join("/") + "/_layout.tsx";
 
