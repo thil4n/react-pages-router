@@ -1,0 +1,11 @@
+@import url("https://cdn.jsdelivr.net/npm/inter@3.19.3/dist/inter.css");
+
+@import "./base.css";
+@tailwind base;
+@layer base {
+    a {
+        @apply no-underline;
+    }
+}
+@tailwind components;
+@tailwind utilities;
