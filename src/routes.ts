@@ -17,6 +17,8 @@ const wrapWithLayout = (Component: any, Layout: any) => {
 };
 
 const routes = Object.keys(modules).map((path) => {
+    console.log(path);
+
     const routePath = path
 
         .replace("./pages", "")
