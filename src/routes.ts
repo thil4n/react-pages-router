@@ -23,5 +23,16 @@ const routes = Object.keys(modules).map((path) => {
         .replace(/\/index\.tsx$/, "/")
         .replace(/\[([^\]]+)]/g, ":$1");
 
-    const layoutPath = path.split();
+    const layoutPath = path.split("/").slice(0, -1).join("/") + "/_layout.tsx";
+
+    const Layout = modules[layoutPath] ? React.lazy(modules[layoutPath]) : null;
+
+    const Component = React.lazy(modules[path]);
+
+    return {
+        path: routePath === "" ? "/" : routePath,
+        element: wrapWithLayout(Component, Layout),
+    };
 });
+
+export default routes;
