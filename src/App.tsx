@@ -9,6 +9,7 @@ const AppRoutes = () => {
         </Suspense>
     );
 };
+
 const App = () => {
     return (
         <Router>
