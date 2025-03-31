@@ -1,15 +1,16 @@
 import React from "react";
 
-const modules = import.meta.glob<{ default: React.ComponentType<any> }>(
+const modules = import.meta.glob<{ default: React.ComponentType }>(
     "./pages/**/*.tsx"
 );
 
-const wrapWithLayout = (Component: any, Layout: any) => {
+const wrapWithLayout = (
+    Component: React.ComponentType,
+    Layout?: React.ComponentType
+): JSX.Element => {
     return React.createElement(
         React.Suspense,
-        {
-            fallback: React.createElement("div", null, "loading"),
-        },
+        { fallback: React.createElement("div", null, "loading...") },
         Layout
             ? React.createElement(Layout, null, React.createElement(Component))
             : React.createElement(Component)
@@ -17,19 +18,16 @@ const wrapWithLayout = (Component: any, Layout: any) => {
 };
 
 const routes = Object.keys(modules).map((path) => {
-    console.log(path);
-
     const routePath = path
-
         .replace("./pages", "")
         .replace(/\/index\.tsx$/, "/")
-        .replace(/\(.*?\)\//g, "") // Remove group folders
+        .replace(/\(.*?\)\//g, "")
         .replace(/\[([^\]]+)\]/g, ":$1");
 
-    const layoutPath = path.split("/").slice(0, -1).join("/") + "/_layout.tsx";
-
-    const Layout = modules[layoutPath] ? React.lazy(modules[layoutPath]) : null;
-
+    const layoutPath = path.replace(/\/[^/]+\.tsx$/, "/_layout.tsx");
+    const Layout = modules[layoutPath]
+        ? React.lazy(modules[layoutPath])
+        : undefined;
     const Component = React.lazy(modules[path]);
 
     return {
