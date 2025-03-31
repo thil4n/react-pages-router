@@ -1,7 +1,8 @@
 import React from "react";
+import AuthMiddleware from "./AuthMiddleware";
 
 const modules = import.meta.glob<{ default: React.ComponentType }>(
-    "./pages/**/*.tsx"
+    "../pages/**/*.tsx"
 );
 
 const wrapWithLayout = (
@@ -19,10 +20,12 @@ const wrapWithLayout = (
 
 const routes = Object.keys(modules).map((path) => {
     const routePath = path
-        .replace("./pages", "")
+        .replace("../pages", "")
         .replace(/\/index\.tsx$/, "/")
         .replace(/\(.*?\)\//g, "")
         .replace(/\[([^\]]+)\]/g, ":$1");
+
+    console.log(routePath);
 
     const layoutPath = path.replace(/\/[^/]+\.tsx$/, "/_layout.tsx");
     const Layout = modules[layoutPath]
@@ -32,7 +35,11 @@ const routes = Object.keys(modules).map((path) => {
 
     return {
         path: routePath === "" ? "/" : routePath,
-        element: wrapWithLayout(Component, Layout),
+        element: React.createElement(
+            AuthMiddleware,
+            { path: routePath },
+            wrapWithLayout(Component, Layout)
+        ),
     };
 });
 

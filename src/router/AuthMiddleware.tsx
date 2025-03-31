@@ -1,54 +1,27 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
-enum RoutesState {
-    Allowed,
-    UnAuthenticated,
-    UnAuthorized,
-    Unsubscribed,
+interface AuthMiddlewareProps {
+    children?: React.ReactNode;
+    path: string;
 }
 
-const AuthMiddleware = () => {
+const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children, path }) => {
+    const isAuthenticated = true;
+
     const location = useLocation();
-    const pathSegments = location.pathname.split("/").filter(Boolean);
-    const { userData } = useUser();
-    const target: string = pathSegments[1] || "home";
 
-    return <Outlet context={{ path: target }} />;
-
-    const hasAccess = (path: string): RoutesState => {
-        if (!userData) {
-            return RoutesState.UnAuthenticated;
-        }
-
-        return RoutesState.UnAuthorized;
-    };
-
-    const accessState = hasAccess(target);
-    console.log("AuthGuard", accessState);
-
-    switch (accessState) {
-        case RoutesState.Allowed:
-            return <Outlet context={{ path: target }} />;
-        case RoutesState.UnAuthenticated:
-            return <Navigate to="/login" />;
-        case RoutesState.Unsubscribed:
-            return <Navigate to="/dashboard/subscription" />;
-        case RoutesState.UnAuthorized:
-            return <Navigate to="/unauthorized" />;
-        default:
-            return <Navigate to="/login" />;
+    // Redirect to login if not authenticated
+    if (!isAuthenticated) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // if (!user) return <Navigate to="/login" />;
-    // // if (rand) {
-    // //     return <Navigate to="/dashboard/subscription" />;
-    // // }
-    // if (!hasAccess(target)) {
-    //     toast.error("You have no access to this section!");
-    //     return <Navigate to="/dashboard" />;
-    // }
+    // Redirect to unauthorized page if user role doesn't match
+    if (isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
 
-    // return <Outlet context={{ path: target }} />;
+    return <>{children};</>;
 };
 
 export default AuthMiddleware;
